@@ -6,13 +6,13 @@ const employeeJSON = require('./assets/employees.json');
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-   cors: 'http://localhost:8080'
+   cors: 'http://localhost:8080/'
 });
 
 // Connected Employees
-let employeeIds = {};
+let employees = [];
 
-const addEmployeeId = (socket) => {
+const addEmployee = (socket) => {
    if (socket == null || socket.id == null) {
       return false;
    }
@@ -25,29 +25,38 @@ const addEmployeeId = (socket) => {
       return false;
    }
 
-   const employeeId = `${socket.id}-${name}-${surname}`;
-   socket.employeeId = employeeId;
-   employeeIds[employeeId] = employeeId;
+   const employee = {
+      id: socket.id,
+      name: name,
+      surname: surname
+   };
+
+   socket.employee = employee;
+   employees.push(employee);
 
    return true;
 }
 
 io.on('connection', (socket) => {
    let addedEmployee = false;
-   if (addEmployeeId(socket)) {
+   if (addEmployee(socket)) {
       addedEmployee = true;
 
       socket.broadcast.emit('employee joined', {
-         employeeId: socket.employeeId
+         employee: socket.employee
       });
    }
 
+   socket.on('update content', (content) => {
+      socket.broadcast.emit('content updated', content);
+   });
+
    socket.on('disconnect', () => {
       if (addedEmployee) {
-         delete employeeIds[socket.employeeId];
+         employees = employees.filter(x => x.id === socket.employee.id);
 
          socket.broadcast.emit('employee quit', {
-            employeeId: socket.employeeId
+            employee: socket.employee
          });
       }
    });
