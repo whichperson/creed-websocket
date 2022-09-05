@@ -1,0 +1,12 @@
+{
+  "name": "creed-websocket",
+  "version": "1.0.0",
+  "author": "whichperson",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "websocket": "1.0.34"
+  }
+}
