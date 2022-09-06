@@ -1,22 +1,14 @@
 const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const io = module.exports.io = require('socket.io')(server, {
-   cors: ['https://creedthots.netlify.app/'],
-   transports: ['websocket', 'polling']
-});
+const socketIO = require('socket.io');
 
-// const express = require('express');
-// const { createServer } = require('http');
-// const { Server } = require('socket.io');
-// const employeeJSON = require('./assets/employees.json');
+const PORT = process.env.PORT || 3000;
+const INDEX = '/index.html';
 
+const server = express()
+    .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+    .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-// const app = express();
-// const httpServer = createServer(app);
-// const io = new Server(httpServer, {
-//
-// });
+const io = socketIO(server);
 
 // Connected Employees
 let employees = [];
@@ -70,5 +62,3 @@ io.on('connection', (socket) => {
       }
    });
 });
-
-server.listen(process.env.PORT || 3000);
