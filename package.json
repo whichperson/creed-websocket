@@ -4,8 +4,7 @@
   "author": "whichperson",
   "main": "src/server.js",
   "scripts": {
-    "start": "./node_modules/.bin/netlify-lambda serve src",
-    "build": "./node_modules/.bin/netlify-lambda build src"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "express": "4.18.1",
