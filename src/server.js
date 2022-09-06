@@ -3,10 +3,12 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const employeeJSON = require('./assets/employees.json');
 
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-   cors: 'http://localhost:8080/'
+   cors: ['https://creedthots.netlify.app/'],
+   transports: ['websocket', 'polling']
 });
 
 // Connected Employees
@@ -62,4 +64,4 @@ io.on('connection', (socket) => {
    });
 });
 
-httpServer.listen(3000);
+httpServer.listen(process.env.PORT || 3000);
