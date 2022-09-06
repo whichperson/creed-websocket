@@ -1,15 +1,22 @@
 const express = require('express');
-const { createServer } = require('http');
-const { Server } = require('socket.io');
-const employeeJSON = require('./assets/employees.json');
-
-
 const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
+const server = require('http').createServer(app);
+const io = module.exports.io = require('socket.io')(server, {
    cors: ['https://creedthots.netlify.app/'],
    transports: ['websocket', 'polling']
 });
+
+// const express = require('express');
+// const { createServer } = require('http');
+// const { Server } = require('socket.io');
+// const employeeJSON = require('./assets/employees.json');
+
+
+// const app = express();
+// const httpServer = createServer(app);
+// const io = new Server(httpServer, {
+//
+// });
 
 // Connected Employees
 let employees = [];
@@ -64,4 +71,4 @@ io.on('connection', (socket) => {
    });
 });
 
-httpServer.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000);
